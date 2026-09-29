@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-chakra: 'Chakra Petch', -apple-system, sans-serif;
+    --font-jakarta: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  }
+
+  html, body, #root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    font-family: var(--font-jakarta);
+    background-color: #07090e;
+  }
+}
+
+.font-display {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+.font-body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
