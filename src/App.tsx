@@ -6,13 +6,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { GameEngine } from './game/core/GameEngine';
 import { GameState, GameStats } from './game/types';
-import { GameInputAction } from './game/input/InputManager';
 import { soundEffects } from './game/audio/SoundEffects';
 import { GameHUD } from './components/GameHUD';
 import { StartScreen } from './components/StartScreen';
 import { GameOverModal } from './components/GameOverModal';
 import { PauseOverlay } from './components/PauseOverlay';
-import { TouchControls } from './components/TouchControls';
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +41,6 @@ export default function App() {
         setStats(updatedStats);
       },
       onCrash: () => {
-        // Haptic feedback if supported on mobile
         if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
           try {
             navigator.vibrate([40, 60, 80]);
@@ -99,10 +96,6 @@ export default function App() {
     setIsMuted(nextMuted);
   }, []);
 
-  const handleTouchAction = useCallback((action: GameInputAction) => {
-    engineRef.current?.triggerAction(action);
-  }, []);
-
   return (
     <main
       ref={containerRef}
@@ -137,12 +130,6 @@ export default function App() {
       {gameState === 'PAUSED' && (
         <PauseOverlay onResume={handleTogglePause} />
       )}
-
-      {/* Touch Buttons for Mobile Navigation */}
-      <TouchControls
-        onAction={handleTouchAction}
-        visible={gameState === 'RUNNING'}
-      />
     </main>
   );
 }

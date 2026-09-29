@@ -1,6 +1,6 @@
 {
   "name": "Sprint Runner",
-  "description": "Fast-paced 3D lane runner built with Three.js, featuring responsive swipe and keyboard controls, procedural track generation, and an offline-ready modular architecture.",
+  "description": "Fast-paced 3D lane runner through ancient jungle ruins built with Three.js, featuring modular temple segments, responsive swipe controls, and an offline-ready architecture.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

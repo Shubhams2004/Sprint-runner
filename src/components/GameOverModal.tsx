@@ -50,7 +50,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ stats, onRestart }
 
           <div className="flex flex-col p-3 rounded-2xl bg-neutral-800/50 border border-neutral-700/40">
             <span className="text-[11px] font-semibold uppercase text-neutral-400">
-              Energy Sparks
+              Sun Medallions
             </span>
             <span className="font-display text-2xl font-bold text-amber-400 tabular-nums mt-1">
               {stats.coins}
@@ -71,7 +71,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ stats, onRestart }
         {/* Primary CTA */}
         <button
           onClick={onRestart}
-          className="w-full py-4 bg-cyan-500 hover:bg-cyan-400 active:bg-cyan-600 text-neutral-950 font-display font-extrabold text-lg tracking-wider uppercase rounded-2xl shadow-[0_0_24px_rgba(6,182,212,0.4)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-4 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-neutral-950 font-display font-extrabold text-lg tracking-wider uppercase rounded-2xl shadow-[0_0_24px_rgba(245,158,11,0.4)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
         >
           <RotateCcw className="w-5 h-5" />
           <span>Sprint Again</span>

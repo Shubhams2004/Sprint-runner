@@ -11,14 +11,14 @@ export const StartScreen: React.FC<StartScreenProps> = ({ onStart, highScore }) 
     <div className="absolute inset-0 z-20 flex flex-col items-center justify-between p-6 md:p-10 pointer-events-auto bg-neutral-950/40 backdrop-blur-[2px]">
       {/* Top Banner / Wordmark */}
       <div className="flex flex-col items-center text-center mt-6">
-        <span className="text-xs font-bold tracking-[0.25em] uppercase text-cyan-400 mb-2">
-          3D High-Speed Lane Runner
+        <span className="text-xs font-bold tracking-[0.25em] uppercase text-amber-400 mb-2">
+          Ancient Jungle Ruins · 3D Runner
         </span>
         <h1 className="font-display text-5xl md:text-7xl font-extrabold text-white tracking-wider drop-shadow-2xl">
           SPRINT RUNNER
         </h1>
         {highScore > 0 && (
-          <p className="mt-2 text-sm text-neutral-400">
+          <p className="mt-2 text-sm text-neutral-300">
             Personal Best:{' '}
             <span className="font-mono font-bold text-amber-400 tabular-nums">
               {highScore.toLocaleString()} pts
@@ -31,10 +31,10 @@ export const StartScreen: React.FC<StartScreenProps> = ({ onStart, highScore }) 
       <div className="flex flex-col items-center gap-3">
         <button
           onClick={onStart}
-          className="group relative px-8 py-4 bg-cyan-500 hover:bg-cyan-400 active:bg-cyan-600 text-neutral-950 font-display font-extrabold text-xl tracking-wider uppercase rounded-2xl shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center gap-3 cursor-pointer"
+          className="group relative px-8 py-4 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-neutral-950 font-display font-extrabold text-xl tracking-wider uppercase rounded-2xl shadow-[0_0_30px_rgba(245,158,11,0.5)] transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center gap-3 cursor-pointer"
         >
           <Play className="w-6 h-6 fill-neutral-950" />
-          <span>Launch Sprint</span>
+          <span>Enter Ruins</span>
         </button>
         <span className="text-xs text-neutral-400 font-medium tracking-wide">
           Tap button or press <kbd className="px-1.5 py-0.5 bg-neutral-800 text-neutral-200 rounded font-mono text-[11px]">SPACE</kbd>

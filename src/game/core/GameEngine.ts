@@ -126,10 +126,10 @@ export class GameEngine {
     if (this.state === 'RUNNING' && this.player) {
       switch (action) {
         case 'LEFT':
-          this.player.moveLeft();
+          this.player.changeLane(-1);
           break;
         case 'RIGHT':
-          this.player.moveRight();
+          this.player.changeLane(1);
           break;
         case 'JUMP':
           this.player.jump();
@@ -220,15 +220,17 @@ export class GameEngine {
 
         // Update camera and lights
         this.cameraController.update(this.player, dt);
-        this.renderer.updateLightPosition(this.player.z);
+        this.renderer.updateLightPosition(this.player.z, this.player.x);
       } else if (this.state === 'GAME_OVER') {
         // Continue camera shake decay and player tumble
         this.player.update(dt);
         this.cameraController.update(this.player, dt);
+        this.renderer.updateLightPosition(this.player.z, this.player.x);
       } else if (this.state === 'START') {
         // Idle animation at start
         this.player.update(0);
         this.cameraController.update(this.player, dt);
+        this.renderer.updateLightPosition(this.player.z, this.player.x);
       }
 
       // Render 3D scene

@@ -69,7 +69,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
         <button
           onClick={onToggleMute}
           aria-label={isMuted ? 'Unmute game audio' : 'Mute game audio'}
-          className="w-10 h-10 rounded-xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/50 flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-800 transition-colors shadow-lg active:scale-95"
+          className="w-10 h-10 rounded-xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/50 flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-800 transition-colors shadow-lg active:scale-95 cursor-pointer"
         >
           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
         </button>
@@ -78,7 +78,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           <button
             onClick={onTogglePause}
             aria-label="Pause run"
-            className="w-10 h-10 rounded-xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/50 flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-800 transition-colors shadow-lg active:scale-95"
+            className="w-10 h-10 rounded-xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/50 flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-800 transition-colors shadow-lg active:scale-95 cursor-pointer"
           >
             <Pause className="w-4 h-4" />
           </button>
@@ -88,9 +88,9 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           <button
             onClick={onTogglePause}
             aria-label="Resume run"
-            className="w-10 h-10 rounded-xl bg-cyan-600 text-white flex items-center justify-center hover:bg-cyan-500 transition-colors shadow-lg active:scale-95"
+            className="w-10 h-10 rounded-xl bg-amber-500 text-neutral-950 font-bold flex items-center justify-center hover:bg-amber-400 transition-colors shadow-lg active:scale-95 cursor-pointer"
           >
-            <Play className="w-4 h-4" />
+            <Play className="w-4 h-4 fill-neutral-950" />
           </button>
         )}
       </div>

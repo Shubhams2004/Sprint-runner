@@ -13,7 +13,7 @@ export class CameraController {
   private shakeIntensity: number = 0;
 
   constructor(aspect: number) {
-    this.camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 350);
+    this.camera = new THREE.PerspectiveCamera(68, aspect, 0.1, 450);
     this.reset();
   }
 
@@ -34,18 +34,18 @@ export class CameraController {
   }
 
   public update(player: Player, dt: number) {
-    // 1. Damped camera positioning
-    const targetCamX = player.x * 0.6;
-    const targetCamY = player.y * 0.25 + CAMERA_OFFSET_Y;
+    // 1. Damped camera positioning behind and slightly above the runner
+    const targetCamX = player.x * 0.85;
+    const targetCamY = player.currentGroundY + player.y * 0.2 + CAMERA_OFFSET_Y;
     const targetCamZ = player.z + CAMERA_OFFSET_Z;
 
     // Smooth lateral damping
-    const lerpSpeed = 14.0;
+    const lerpSpeed = 12.0;
     this.camera.position.x += (targetCamX - this.camera.position.x) * (1 - Math.exp(-lerpSpeed * dt));
     this.camera.position.y += (targetCamY - this.camera.position.y) * (1 - Math.exp(-lerpSpeed * dt));
     this.camera.position.z = targetCamZ;
 
-    // 2. Camera shake decay
+    // 2. Camera shake decay on impact
     if (this.shakeIntensity > 0.001) {
       const offsetX = (Math.random() * 2 - 1) * this.shakeIntensity;
       const offsetY = (Math.random() * 2 - 1) * this.shakeIntensity;
@@ -57,18 +57,20 @@ export class CameraController {
     }
 
     // 3. Look target ahead of player into the scene (+Z)
-    const targetLookX = player.x * 0.35;
-    const targetLookY = player.y * 0.2 + CAMERA_LOOK_AHEAD_Y;
+    const targetLookX = player.x * 0.6;
+    const targetLookY = player.currentGroundY + player.y * 0.2 + CAMERA_LOOK_AHEAD_Y;
     const targetLookZ = player.z + CAMERA_LOOK_AHEAD_Z;
 
     this.currentLookAt.x += (targetLookX - this.currentLookAt.x) * (1 - Math.exp(-12.0 * dt));
     this.currentLookAt.y += (targetLookY - this.currentLookAt.y) * (1 - Math.exp(-12.0 * dt));
     this.currentLookAt.z = targetLookZ;
 
+    // Enforce upright orientation and aim forward into scene
+    this.camera.up.set(0, 1, 0);
     this.camera.lookAt(this.currentLookAt);
 
-    // Dynamic FOV widening slightly with speed (from 60 up to 68)
-    const targetFov = 60 + Math.min(8, (player.speed - 18) * 0.4);
+    // Subtle dynamic FOV expansion on higher speeds
+    const targetFov = 68 + Math.min(8, (player.speed - 18) * 0.4);
     if (Math.abs(this.camera.fov - targetFov) > 0.1) {
       this.camera.fov += (targetFov - this.camera.fov) * (1 - Math.exp(-6.0 * dt));
       this.camera.updateProjectionMatrix();
