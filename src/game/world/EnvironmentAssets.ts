@@ -15,6 +15,10 @@ export class EnvironmentAssets {
   public rootMaterial: THREE.MeshStandardMaterial;
   public goldMaterial: THREE.MeshStandardMaterial;
   public curbMaterial: THREE.MeshStandardMaterial;
+  public laneInlayMaterial: THREE.MeshStandardMaterial;
+  public hurdleDecalMaterial: THREE.MeshBasicMaterial;
+  public obstacleAccentMaterial: THREE.MeshStandardMaterial;
+  public pillarEyeMaterial: THREE.MeshStandardMaterial;
 
   // Shared geometries
   public pillarBaseGeo: THREE.BoxGeometry;
@@ -51,9 +55,44 @@ export class EnvironmentAssets {
     });
 
     this.curbMaterial = new THREE.MeshStandardMaterial({
-      color: 0x484439,
+      color: COLORS.trackBorder || 0x292524,
       roughness: 0.9,
       metalness: 0.05,
+    });
+
+    // High-visibility ancient gold runic lane inlay
+    this.laneInlayMaterial = new THREE.MeshStandardMaterial({
+      color: COLORS.laneDivider || 0xd97706,
+      roughness: 0.4,
+      metalness: 0.6,
+      emissive: 0x92400e,
+      emissiveIntensity: 0.35,
+    });
+
+    // Warning decal directly on the road under/before obstacles for depth perception
+    this.hurdleDecalMaterial = new THREE.MeshBasicMaterial({
+      color: 0x050505,
+      transparent: true,
+      opacity: 0.55,
+      depthWrite: false,
+    });
+
+    // High-contrast warning accents on obstacles
+    this.obstacleAccentMaterial = new THREE.MeshStandardMaterial({
+      color: COLORS.hurdleGlow || 0xf59e0b,
+      roughness: 0.3,
+      metalness: 0.5,
+      emissive: 0xd97706,
+      emissiveIntensity: 0.6,
+    });
+
+    // Radiant crimson guardian eye
+    this.pillarEyeMaterial = new THREE.MeshStandardMaterial({
+      color: COLORS.pillarEye || 0xef4444,
+      roughness: 0.2,
+      metalness: 0.8,
+      emissive: 0xdc2626,
+      emissiveIntensity: 0.9,
     });
 
     this.stoneWallMaterial = new THREE.MeshStandardMaterial({
@@ -155,9 +194,9 @@ export class EnvironmentAssets {
       shaft.castShadow = true;
       group.add(shaft);
 
-      // Fallen rock/capital chunk nearby
+      // Fallen rock/capital chunk nearby (oriented along Z to never extend laterally toward track)
       const fallen = new THREE.Mesh(this.pillarCapitalGeo, this.pillarMaterial);
-      fallen.position.set(0.6, 0.2, 0.3);
+      fallen.position.set(0, 0.2, 0.6);
       fallen.rotation.set(0.4, 0.2, 0.8);
       group.add(fallen);
     } else {

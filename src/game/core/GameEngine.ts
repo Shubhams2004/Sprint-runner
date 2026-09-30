@@ -1,4 +1,4 @@
-import { GameState, GameStats, GameCallbacks } from '../types';
+import { GameState, GameStats, GameCallbacks, CollisionDebugInfo } from '../types';
 import { INITIAL_SPEED, MAX_SPEED, SPEED_ACCELERATION } from '../constants';
 import { GameRenderer } from '../rendering/GameRenderer';
 import { CameraController } from '../camera/CameraController';
@@ -30,6 +30,7 @@ export class GameEngine {
   private animFrameId: number | null = null;
   private lastTime: number = 0;
   private isDestroyed = false;
+  private keydownListener: ((e: KeyboardEvent) => void) | null = null;
 
   constructor() {
     this.loadHighScore();
@@ -56,6 +57,14 @@ export class GameEngine {
     this.inputManager.attach(container);
     this.inputManager.onAction(this.handleInputAction.bind(this));
 
+    // Keyboard shortcut 'C' for collision debug overlay
+    this.keydownListener = (e: KeyboardEvent) => {
+      if (e.key === 'c' || e.key === 'C') {
+        this.toggleDebugColliders();
+      }
+    };
+    window.addEventListener('keydown', this.keydownListener);
+
     // Handle container resize
     this.handleResize(container.clientWidth, container.clientHeight);
 
@@ -67,6 +76,35 @@ export class GameEngine {
     this.lastTime = performance.now();
     this.loop = this.loop.bind(this);
     this.animFrameId = requestAnimationFrame(this.loop);
+  }
+
+  public toggleDebugColliders(): boolean {
+    if (!this.trackManager) return false;
+    return this.trackManager.toggleDebugColliders();
+  }
+
+  public isDebugCollidersEnabled(): boolean {
+    return this.trackManager?.isDebugCollidersEnabled() || false;
+  }
+
+  public getDebugInfo(): CollisionDebugInfo {
+    if (!this.player || !this.trackManager) {
+      return {
+        playerX: 0,
+        playerZ: 0,
+        playerLane: 0,
+        nearestHurdle: null,
+        hasImpact: false,
+      };
+    }
+
+    return {
+      playerX: this.player.x,
+      playerZ: this.player.z,
+      playerLane: this.player.laneIndex,
+      nearestHurdle: this.trackManager.getNearestHurdle(this.player.z),
+      hasImpact: this.player.isDead,
+    };
   }
 
   public handleResize(width: number, height: number) {
@@ -181,7 +219,7 @@ export class GameEngine {
         this.player.update(dt);
 
         // Update procedural track
-        this.trackManager.update(this.player.z, dt);
+        this.trackManager.update(this.player, dt);
 
         // Collision check
         const col = this.collisionSystem.checkCollisions(this.player, this.trackManager.activeObstacles);
@@ -235,6 +273,11 @@ export class GameEngine {
 
       // Render 3D scene
       this.renderer.render(this.cameraController.camera);
+
+      // Stream collision debug telemetry when active
+      if (this.trackManager.isDebugCollidersEnabled() && this.callbacks?.onDebugUpdate) {
+        this.callbacks.onDebugUpdate(this.getDebugInfo());
+      }
     }
 
     this.animFrameId = requestAnimationFrame(this.loop);
@@ -282,6 +325,10 @@ export class GameEngine {
     if (this.animFrameId !== null) {
       cancelAnimationFrame(this.animFrameId);
       this.animFrameId = null;
+    }
+    if (this.keydownListener) {
+      window.removeEventListener('keydown', this.keydownListener);
+      this.keydownListener = null;
     }
     this.inputManager.detach();
     if (this.renderer) {

@@ -46,9 +46,25 @@ export interface GameStats {
   speed: number;
 }
 
+export interface NearestHurdleDebug {
+  x: number;
+  z: number;
+  lane: number;
+  distance: number;
+}
+
+export interface CollisionDebugInfo {
+  playerX: number;
+  playerZ: number;
+  playerLane: number;
+  nearestHurdle: NearestHurdleDebug | null;
+  hasImpact: boolean;
+}
+
 export interface GameCallbacks {
   onStateChange: (state: GameState) => void;
   onStatsUpdate: (stats: GameStats) => void;
   onCrash: () => void;
   onCoinCollect: (coins: number) => void;
+  onDebugUpdate?: (debugInfo: CollisionDebugInfo) => void;
 }

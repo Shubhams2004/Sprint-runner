@@ -1,21 +1,25 @@
 import React from 'react';
-import { Volume2, VolumeX, Pause, Play } from 'lucide-react';
+import { Volume2, VolumeX, Pause, Play, Box } from 'lucide-react';
 import { GameStats, GameState } from '../game/types';
 
 interface GameHUDProps {
   stats: GameStats;
   gameState: GameState;
   isMuted: boolean;
+  isDebugColliders?: boolean;
   onToggleMute: () => void;
   onTogglePause: () => void;
+  onToggleDebugColliders?: () => void;
 }
 
 export const GameHUD: React.FC<GameHUDProps> = ({
   stats,
   gameState,
   isMuted,
+  isDebugColliders = false,
   onToggleMute,
   onTogglePause,
+  onToggleDebugColliders,
 }) => {
   return (
     <header className="absolute top-0 left-0 right-0 p-4 md:p-6 pointer-events-none z-10 flex items-center justify-between select-none">
@@ -64,8 +68,23 @@ export const GameHUD: React.FC<GameHUDProps> = ({
         </div>
       </div>
 
-      {/* Zone 3: Audio & Pause Controls */}
+      {/* Zone 3: Audio, Debug & Pause Controls */}
       <div className="pointer-events-auto flex items-center gap-2">
+        {onToggleDebugColliders && (
+          <button
+            onClick={onToggleDebugColliders}
+            title={isDebugColliders ? 'Hide Collision Volumes [C]' : 'Show Collision Volumes [C]'}
+            aria-label={isDebugColliders ? 'Disable collision visualization' : 'Enable collision visualization'}
+            className={`w-10 h-10 rounded-xl backdrop-blur-md border flex items-center justify-center transition-all shadow-lg active:scale-95 cursor-pointer ${
+              isDebugColliders
+                ? 'bg-cyan-500/25 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.4)]'
+                : 'bg-neutral-900/70 border-neutral-700/50 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
+            }`}
+          >
+            <Box className="w-4 h-4" />
+          </button>
+        )}
+
         <button
           onClick={onToggleMute}
           aria-label={isMuted ? 'Unmute game audio' : 'Mute game audio'}

@@ -5,12 +5,13 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { GameEngine } from './game/core/GameEngine';
-import { GameState, GameStats } from './game/types';
+import { GameState, GameStats, CollisionDebugInfo } from './game/types';
 import { soundEffects } from './game/audio/SoundEffects';
 import { GameHUD } from './components/GameHUD';
 import { StartScreen } from './components/StartScreen';
 import { GameOverModal } from './components/GameOverModal';
 import { PauseOverlay } from './components/PauseOverlay';
+import { DebugReadout } from './components/DebugReadout';
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,12 +27,22 @@ export default function App() {
     speed: 0,
   });
   const [isMuted, setIsMuted] = useState<boolean>(() => soundEffects.isMuted());
+  const [debugColliders, setDebugColliders] = useState<boolean>(false);
+  const [debugInfo, setDebugInfo] = useState<CollisionDebugInfo | null>(null);
 
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
 
     const engine = new GameEngine();
     engineRef.current = engine;
+
+    // Synchronize React state when user presses keyboard shortcut 'C'
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'c' || e.key === 'C') {
+        setDebugColliders((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
 
     engine.init(canvasRef.current, containerRef.current, {
       onStateChange: (newState) => {
@@ -58,6 +69,9 @@ export default function App() {
           }
         }
       },
+      onDebugUpdate: (info) => {
+        setDebugInfo(info);
+      },
     });
 
     // Resize observer for responsive full-viewport rendering
@@ -73,6 +87,7 @@ export default function App() {
     resizeObserver.observe(containerRef.current);
 
     return () => {
+      window.removeEventListener('keydown', handleKeyDown);
       resizeObserver.disconnect();
       engine.destroy();
       engineRef.current = null;
@@ -96,6 +111,11 @@ export default function App() {
     setIsMuted(nextMuted);
   }, []);
 
+  const handleToggleDebugColliders = useCallback(() => {
+    const nextVal = engineRef.current?.toggleDebugColliders() || false;
+    setDebugColliders(nextVal);
+  }, []);
+
   return (
     <main
       ref={containerRef}
@@ -112,8 +132,10 @@ export default function App() {
         stats={stats}
         gameState={gameState}
         isMuted={isMuted}
+        isDebugColliders={debugColliders}
         onToggleMute={handleToggleMute}
         onTogglePause={handleTogglePause}
+        onToggleDebugColliders={handleToggleDebugColliders}
       />
 
       {/* Start Overlay */}
@@ -130,6 +152,9 @@ export default function App() {
       {gameState === 'PAUSED' && (
         <PauseOverlay onResume={handleTogglePause} />
       )}
+
+      {/* Collision Debug Readout (when debug mode is active) */}
+      {debugColliders && <DebugReadout info={debugInfo} />}
     </main>
   );
 }
